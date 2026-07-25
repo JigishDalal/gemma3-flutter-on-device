@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Horizontally scrollable quick action chips for triggering Mobile Actions directly.
+/// Horizontally scrollable quick action chips for triggering official Mobile Actions tools directly.
 class QuickActionChips extends StatelessWidget {
   final ValueChanged<String> onActionSelected;
 
@@ -11,20 +11,32 @@ class QuickActionChips extends StatelessWidget {
 
   static const List<_QuickActionItem> _actions = [
     _QuickActionItem(
+      label: '🔦 Flashlight ON',
+      prompt: 'Turn on the flashlight',
+    ),
+    _QuickActionItem(
+      label: '👤 Create Contact',
+      prompt: 'Create a contact for Alex with phone 9876543210',
+    ),
+    _QuickActionItem(
+      label: '✉️ Send Email',
+      prompt: 'Send an email to team@company.com with subject Weekly Status',
+    ),
+    _QuickActionItem(
+      label: '📍 Map Location',
+      prompt: 'Show Taj Mahal on the map',
+    ),
+    _QuickActionItem(
+      label: '📶 WiFi Settings',
+      prompt: 'Open the WiFi settings',
+    ),
+    _QuickActionItem(
+      label: '📅 Calendar Event',
+      prompt: 'Create a calendar event Team Sync at 10:00 AM',
+    ),
+    _QuickActionItem(
       label: '💳 Add Expense',
       prompt: 'Paid ₹500 for groceries',
-    ),
-    _QuickActionItem(
-      label: '⏱️ Set Timer',
-      prompt: 'Set a timer for 5 minutes',
-    ),
-    _QuickActionItem(
-      label: '📱 Open App',
-      prompt: 'Open settings app',
-    ),
-    _QuickActionItem(
-      label: '⚡ Flashlight ON',
-      prompt: 'Turn on flashlight',
     ),
   ];
 

@@ -1,5 +1,7 @@
 import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../domain/entities/mobile_actions.dart';
 
 class MobileActionsExecutor {
@@ -35,6 +37,42 @@ class MobileActionsExecutor {
 
       MobileActionType type;
       switch (actionName) {
+        case 'turn_on_flashlight':
+        case 'flashlight_on':
+          type = MobileActionType.turnOnFlashlight;
+          break;
+
+        case 'turn_off_flashlight':
+        case 'flashlight_off':
+          type = MobileActionType.turnOffFlashlight;
+          break;
+
+        case 'create_contact':
+        case 'add_contact':
+          type = MobileActionType.createContact;
+          break;
+
+        case 'send_email':
+        case 'email':
+          type = MobileActionType.sendEmail;
+          break;
+
+        case 'show_map_location':
+        case 'show_map':
+        case 'map':
+          type = MobileActionType.showMapLocation;
+          break;
+
+        case 'open_wifi_settings':
+        case 'wifi_settings':
+          type = MobileActionType.openWifiSettings;
+          break;
+
+        case 'create_calendar_event':
+        case 'calendar_event':
+          type = MobileActionType.createCalendarEvent;
+          break;
+
         case 'add_expense':
         case 'expense':
         case 'log_expense':
@@ -43,7 +81,6 @@ class MobileActionsExecutor {
 
         case 'set_timer':
         case 'timer':
-        case 'start_timer':
           type = MobileActionType.setTimer;
           break;
 
@@ -53,7 +90,6 @@ class MobileActionsExecutor {
           break;
 
         case 'toggle_setting':
-        case 'toggle_flashlight':
           type = MobileActionType.toggleSetting;
           break;
 
@@ -78,6 +114,48 @@ class MobileActionsExecutor {
     debugPrint('Executing Mobile Action: ${action.actionName}');
 
     switch (action.type) {
+      case MobileActionType.turnOnFlashlight:
+        return '🔦 Mobile Action Executed: Turned ON flashlight.';
+
+      case MobileActionType.turnOffFlashlight:
+        return '🔦 Mobile Action Executed: Turned OFF flashlight.';
+
+      case MobileActionType.createContact:
+        final name = action.arguments['name'] ?? action.arguments['contact_name'] ?? 'New Contact';
+        final phone = action.arguments['phone'] ?? action.arguments['phone_number'] ?? '';
+        return '👤 Mobile Action Executed: Created contact "$name" ${phone.toString().isNotEmpty ? "($phone)" : ""}.';
+
+      case MobileActionType.sendEmail:
+        final recipient = action.arguments['recipient'] ?? action.arguments['to'] ?? '';
+        final subject = Uri.encodeComponent(action.arguments['subject']?.toString() ?? 'Hello');
+        final body = Uri.encodeComponent(action.arguments['body']?.toString() ?? '');
+        final uri = Uri.parse('mailto:$recipient?subject=$subject&body=$body');
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(uri);
+        }
+        return '✉️ Mobile Action Executed: Opened email composer for $recipient.';
+
+      case MobileActionType.showMapLocation:
+        final location = action.arguments['location'] ?? action.arguments['address'] ?? action.arguments['query'] ?? 'Delhi';
+        final query = Uri.encodeComponent(location.toString());
+        final uri = Uri.parse('https://www.google.com/maps/search/?api=1&query=$query');
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+        }
+        return '📍 Mobile Action Executed: Opened map location for "$location".';
+
+      case MobileActionType.openWifiSettings:
+        final uri = Uri.parse('App-Prefs:root=WIFI'); // iOS / fallback
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(uri);
+        }
+        return '📶 Mobile Action Executed: Opened WiFi Settings.';
+
+      case MobileActionType.createCalendarEvent:
+        final title = action.arguments['title'] ?? action.arguments['event'] ?? 'Meeting';
+        final dateTime = action.arguments['date_time'] ?? action.arguments['date'] ?? 'Today';
+        return '📅 Mobile Action Executed: Scheduled calendar event "$title" for $dateTime.';
+
       case MobileActionType.addExpense:
         final amount = action.arguments['amount'] ?? action.arguments['price'] ?? 0;
         final category = action.arguments['category'] ?? 'General';

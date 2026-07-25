@@ -137,17 +137,28 @@ class ModelRepositoryImpl implements ModelRepository {
   }
 
   String _buildPrompt(String userInput) {
+    final now = DateTime.now();
+    final dateStr =
+        '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')} ${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
+
     return '''
 <start_of_turn>user
-You are an offline on-device Mobile Actions and Expense AI agent. Analyze the user prompt and extract intent into JSON matching one of these actions:
+You are an offline FunctionGemma Mobile Actions Agent.
+Current Date and Time: $dateStr
 
-Actions:
-1. add_expense: {"action":"add_expense","arguments":{"amount":500,"currency":"INR","category":"Groceries","description":"paid 500 for groceries"}}
-2. set_timer: {"action":"set_timer","arguments":{"seconds":300,"label":"Tea timer"}}
-3. open_app: {"action":"open_app","arguments":{"app_name":"Settings"}}
-4. toggle_setting: {"action":"toggle_setting","arguments":{"setting_name":"flashlight","enable":true}}
+Available Mobile Action Tools:
+1. turn_on_flashlight: {"action":"turn_on_flashlight","arguments":{}}
+2. turn_off_flashlight: {"action":"turn_off_flashlight","arguments":{}}
+3. create_contact: {"action":"create_contact","arguments":{"name":"string","phone_number":"string"}}
+4. send_email: {"action":"send_email","arguments":{"recipient":"email","subject":"subject","body":"text"}}
+5. show_map_location: {"action":"show_map_location","arguments":{"location":"address or query"}}
+6. open_wifi_settings: {"action":"open_wifi_settings","arguments":{}}
+7. create_calendar_event: {"action":"create_calendar_event","arguments":{"title":"string","date_time":"YYYY-MM-DD HH:mm"}}
+8. add_expense: {"action":"add_expense","arguments":{"amount":number,"currency":"INR","category":"string"}}
 
-User request: $userInput<end_of_turn>
+Output ONLY a JSON function call object matching the user request.
+
+User Request: $userInput<end_of_turn>
 <start_of_turn>model
 ''';
   }
