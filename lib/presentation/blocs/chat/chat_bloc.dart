@@ -1,8 +1,10 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
+
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
+
 import '../../../../domain/entities/chat_message.dart';
 import '../../../../domain/repositories/model_repository.dart';
 import '../../../data/services/voice_service.dart';

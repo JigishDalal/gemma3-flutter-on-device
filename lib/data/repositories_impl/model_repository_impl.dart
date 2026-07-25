@@ -71,7 +71,7 @@ class ModelRepositoryImpl implements ModelRepository {
                 final progress = ((received / total) * 100).toInt();
                 if (progress != lastProgress) {
                   lastProgress = progress;
-                  controller.add("<download>$progress</download>");
+                  controller.add('<download>$progress</download>');
                 }
               }
             },
@@ -84,7 +84,7 @@ class ModelRepositoryImpl implements ModelRepository {
           yield progress;
         }
       } catch (e) {
-        yield "<error>Download failed: $e</error>";
+        yield '<error>Download failed: $e</error>';
         return;
       }
     }
@@ -107,7 +107,7 @@ class ModelRepositoryImpl implements ModelRepository {
         ),
       );
     } catch (e) {
-      yield "<error>Unable to load model: $e</error>";
+      yield '<error>Unable to load model: $e</error>';
       return;
     }
 
@@ -130,7 +130,7 @@ class ModelRepositoryImpl implements ModelRepository {
         }
       }
     } catch (e) {
-      yield "<error>Generation failed: $e</error>";
+      yield '<error>Generation failed: $e</error>';
     } finally {
       await session?.dispose();
     }
