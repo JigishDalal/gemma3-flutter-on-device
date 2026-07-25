@@ -43,6 +43,7 @@ dependencies:
   whisper_ggml: ^2.4.0
   record: ^7.1.1
   permission_handler: ^12.0.3
+  google_fonts: ^6.2.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

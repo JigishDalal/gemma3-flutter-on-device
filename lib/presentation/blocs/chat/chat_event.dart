@@ -31,3 +31,8 @@ class StopVoiceRecordingEvent extends ChatEvent {
 class ClearTranscribedTextEvent extends ChatEvent {
   const ClearTranscribedTextEvent();
 }
+
+/// Triggered from the model setup screen when the user taps "Download".
+class DownloadModelEvent extends ChatEvent {
+  const DownloadModelEvent();
+}

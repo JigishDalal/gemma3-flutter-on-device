@@ -17,6 +17,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   ChatBloc({required this.repository}) : super(const ChatState()) {
     on<CheckModelStatusEvent>(_onCheckModelStatus);
+    on<DownloadModelEvent>(_onDownloadModel);
     on<SendMessageEvent>(_onSendMessage);
     on<StartVoiceRecordingEvent>(_onStartVoiceRecording);
     on<StopVoiceRecordingEvent>(_onStopVoiceRecording);
@@ -49,6 +50,58 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       } catch (e) {
         debugPrint('Failed auto-initializing model: $e');
       }
+    }
+  }
+
+  Future<void> _onDownloadModel(
+    DownloadModelEvent event,
+    Emitter<ChatState> emit,
+  ) async {
+    if (state.isDownloading || state.isModelInstalled) return;
+    emit(state.copyWith(isDownloading: true, downloadProgress: 0.0, clearError: true));
+
+    try {
+      await for (final chunk
+          in repository.generateExpenseResponseStream('')) {
+        if (chunk.startsWith('<download>') && chunk.endsWith('</download>')) {
+          final pct =
+              int.tryParse(
+                chunk
+                    .replaceAll('<download>', '')
+                    .replaceAll('</download>', ''),
+              ) ??
+              0;
+          emit(state.copyWith(
+            isDownloading: true,
+            downloadProgress: pct / 100,
+          ));
+        } else if (chunk.startsWith('<error>') && chunk.endsWith('</error>')) {
+          emit(state.copyWith(
+            errorMessage: chunk
+                .replaceAll('<error>', '')
+                .replaceAll('</error>', ''),
+          ));
+          return;
+        } else {
+          // model is loaded — download complete
+          break;
+        }
+      }
+
+      try {
+        await repository.initializeModel();
+      } catch (_) {}
+
+      emit(state.copyWith(
+        isDownloading: false,
+        isModelInstalled: true,
+        isModelInitialized: repository.isModelInitialized,
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        isDownloading: false,
+        errorMessage: 'Download failed: $e',
+      ));
     }
   }
 
