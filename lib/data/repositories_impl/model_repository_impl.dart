@@ -7,6 +7,7 @@ import 'package:llama_cpp_dart/llama_cpp_dart.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../domain/repositories/model_repository.dart';
+import '../prompts/function_call_prompt.dart';
 
 class ModelRepositoryImpl implements ModelRepository {
   LlamaEngine? _engine;
@@ -143,5 +144,37 @@ $userInput
 <end_of_turn>
 <start_of_turn>model
 ''';
+  }
+
+  @override
+  Stream<String> generateFunctionCallStream(String userInput) async* {
+    // Ensure engine is ready
+    if (_engine == null) {
+      yield '<error>Model not loaded</error>';
+      return;
+    }
+
+    EngineSession? session;
+    try {
+      session = await _engine!.createSession();
+
+      await for (final event in session.generate(
+        prompt: FunctionCallPrompt.build(userInput),
+        addSpecial: true,
+        parseSpecial: true,
+        sampler: const SamplerParams(temperature: 0.3, topK: 20, topP: 0.9),
+        maxTokens: 512,
+      )) {
+        if (event is TokenEvent) {
+          yield event.text;
+        } else if (event is DoneEvent && event.trailingText.isNotEmpty) {
+          yield event.trailingText;
+        }
+      }
+    } catch (e) {
+      yield '<error>Generation failed: $e</error>';
+    } finally {
+      await session?.dispose();
+    }
   }
 }

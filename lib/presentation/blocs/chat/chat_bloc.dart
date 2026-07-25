@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../core/constants/app_strings.dart';
+import '../../../data/parsers/function_call_parser.dart';
+import '../../../data/services/device_action_service.dart';
 import '../../../data/services/voice_service.dart';
 import '../../../domain/entities/chat_message.dart';
 import '../../../domain/repositories/model_repository.dart';
@@ -16,6 +18,7 @@ part 'chat_state.dart';
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final ModelRepository repository;
   final VoiceService voiceService = VoiceService();
+  final DeviceActionService actionService = DeviceActionService();
   final _uuid = const Uuid();
 
   ChatBloc({required this.repository}) : super(const ChatState()) {
@@ -128,7 +131,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
     final response = StringBuffer();
     try {
-      await for (final chunk in repository.generateExpenseResponseStream(
+      // Use the function call stream
+      await for (final chunk in repository.generateFunctionCallStream(
         event.message,
       )) {
         if (chunk.startsWith('<download>') && chunk.endsWith('</download>')) {
@@ -162,11 +166,30 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       final rawOutput = response.toString();
       debugPrint('Gemma direct raw output: $rawOutput');
 
-      final assistantMessage = ChatMessage(
-        id: _uuid.v4(),
-        text: rawOutput.isEmpty ? AppStrings.emptyModelResponse : rawOutput,
-        isUser: false,
-      );
+      // Parse output to check for function call
+      final parsed = FunctionCallParser.parse(rawOutput);
+
+      ChatMessage assistantMessage;
+
+      if (parsed is ParsedFunctionCall) {
+        // Execute the action
+        final result = await actionService.execute(parsed.action);
+        assistantMessage = ChatMessage(
+          id: _uuid.v4(),
+          text: '',
+          isUser: false,
+          action: parsed.action,
+          actionResult: result,
+        );
+      } else {
+        // Normal text response
+        final text = (parsed as ParsedTextResponse).text;
+        assistantMessage = ChatMessage(
+          id: _uuid.v4(),
+          text: text.isEmpty ? AppStrings.emptyModelResponse : text,
+          isUser: false,
+        );
+      }
 
       emit(
         state.copyWith(

@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/constants/app_strings.dart';
 import '../blocs/chat/chat_bloc.dart';
+import '../widgets/action_result_card.dart';
 import '../widgets/animated_orb.dart';
 import '../widgets/animated_silk_background.dart';
+import '../widgets/available_actions_grid.dart';
 import '../widgets/chat_top_bar.dart';
 import '../widgets/download_progress_card.dart';
 import '../widgets/frosted_chat_bubble.dart';
@@ -149,6 +151,24 @@ class _ChatScreenState extends State<ChatScreen> {
                     },
                   ),
 
+                  // Available actions chips (shown when no messages)
+                  BlocBuilder<ChatBloc, ChatState>(
+                    builder: (context, state) {
+                      if (state.messages.isEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: AvailableActionsGrid(
+                            onActionSelected: (prompt) {
+                              _textCtrl.text = prompt;
+                              _sendMessage();
+                            },
+                          ),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
+                  ),
+
                   // Always-visible text + mic input bar
                   BlocBuilder<ChatBloc, ChatState>(
                     builder: (context, state) {
@@ -230,6 +250,12 @@ class _MessagesList extends StatelessWidget {
           itemCount: state.messages.length,
           itemBuilder: (_, i) {
             final msg = state.messages[i];
+            if (msg.action != null && msg.actionResult != null) {
+              return ActionResultCard(
+                action: msg.action!,
+                result: msg.actionResult!,
+              );
+            }
             return FrostedChatBubble(text: msg.text, isUser: msg.isUser);
           },
         );
