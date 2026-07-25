@@ -30,6 +30,32 @@ class ChatTopBar extends StatelessWidget {
                 ),
           ),
           const Spacer(),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.blueAccent.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: Colors.blueAccent.withValues(alpha: 0.35),
+              ),
+            ),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.bolt, size: 12, color: Colors.blueAccent),
+                SizedBox(width: 4),
+                Text(
+                  'Mobile Actions ⚡',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blueAccent,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
           BlocBuilder<ChatBloc, ChatState>(
             builder: (_, state) => ModelStatusDot(state: state),
           ),
