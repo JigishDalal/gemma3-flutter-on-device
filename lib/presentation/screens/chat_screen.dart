@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../core/constants/app_strings.dart';
 import '../blocs/chat/chat_bloc.dart';
 import '../widgets/animated_orb.dart';
 import '../widgets/animated_silk_background.dart';
@@ -141,7 +142,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         return const InfoBanner(
                           icon: Icons.auto_awesome,
                           color: Color(0xFF9B59B6),
-                          label: 'Gemma is thinking…',
+                          label: AppStrings.modelThinking,
                         );
                       }
                       return const SizedBox.shrink();

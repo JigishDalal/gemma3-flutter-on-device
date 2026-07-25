@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/constants/app_strings.dart';
 import '../../core/theme/app_theme.dart';
 
 /// Full-screen overlay shown while the mic is recording or Whisper is
@@ -190,8 +191,8 @@ class _VoiceRecordingOverlayState extends State<VoiceRecordingOverlay>
               duration: const Duration(milliseconds: 300),
               child: Text(
                 widget.isTranscribing
-                    ? 'TRANSCRIBING WITH WHISPER'
-                    : 'LISTENING',
+                    ? AppStrings.labelTranscribing
+                    : AppStrings.labelListening,
                 key: ValueKey(widget.isTranscribing),
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       letterSpacing: 2.2,
@@ -206,8 +207,8 @@ class _VoiceRecordingOverlayState extends State<VoiceRecordingOverlay>
               duration: const Duration(milliseconds: 300),
               child: Text(
                 widget.isTranscribing
-                    ? 'Processing your voice…'
-                    : 'Speak now, tap Stop when done',
+                    ? AppStrings.subtitleTranscribing
+                    : AppStrings.subtitleListening,
                 key: ValueKey('sub_${widget.isTranscribing}'),
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -298,7 +299,7 @@ class _StopButtonState extends State<_StopButton>
               ),
               const SizedBox(width: 10),
               const Text(
-                'Stop Recording',
+                AppStrings.buttonStopRecording,
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,

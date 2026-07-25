@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../../core/constants/app_strings.dart';
 import '../../core/theme/app_theme.dart';
 
 /// A frosted-glass input row that is always visible at the bottom of the screen.
@@ -66,7 +67,7 @@ class PersistentInputBar extends StatelessWidget {
                           fontSize: 15,
                         ),
                     decoration: InputDecoration(
-                      hintText: 'Type something…',
+                      hintText: AppStrings.inputHintText,
                       hintStyle: TextStyle(
                         color: AppTheme.textSecondary.withValues(alpha: 0.65),
                         fontSize: 15,

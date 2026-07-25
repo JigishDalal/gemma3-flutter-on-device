@@ -5,9 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../../domain/entities/chat_message.dart';
-import '../../../../domain/repositories/model_repository.dart';
+import '../../../core/constants/app_strings.dart';
 import '../../../data/services/voice_service.dart';
+import '../../../domain/entities/chat_message.dart';
+import '../../../domain/repositories/model_repository.dart';
 
 part 'chat_event.dart';
 part 'chat_state.dart';
@@ -163,7 +164,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
       final assistantMessage = ChatMessage(
         id: _uuid.v4(),
-        text: rawOutput.isEmpty ? '(Empty response from model)' : rawOutput,
+        text: rawOutput.isEmpty ? AppStrings.emptyModelResponse : rawOutput,
         isUser: false,
       );
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../core/constants/app_strings.dart';
 import '../../core/theme/app_theme.dart';
 import '../blocs/chat/chat_bloc.dart';
 
@@ -15,7 +16,7 @@ class ChatTopBar extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            'Gemma 3',
+            AppStrings.appTitle,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
@@ -23,7 +24,7 @@ class ChatTopBar extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Text(
-            '· On Device',
+            AppStrings.appSubtitle,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: AppTheme.textSecondary,
                   fontSize: 13,
@@ -54,13 +55,13 @@ class ModelStatusDot extends StatelessWidget {
 
     if (state.isModelInitialized) {
       color = const Color(0xFF22C55E);
-      tip = 'Model ready';
+      tip = AppStrings.statusModelReady;
     } else if (state.isModelInstalled) {
       color = const Color(0xFFF59E0B);
-      tip = 'Model installed';
+      tip = AppStrings.statusModelInstalled;
     } else {
       color = const Color(0xFFD1D5DB);
-      tip = 'Model not installed';
+      tip = AppStrings.statusModelNotInstalled;
     }
 
     return Tooltip(

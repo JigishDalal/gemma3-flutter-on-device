@@ -1,4 +1,5 @@
 import 'dart:convert';
+import '../../core/constants/app_strings.dart';
 
 /// Status of expense detection performed by Gemma model.
 enum ExpenseDetectionStatus {
@@ -161,12 +162,12 @@ class ExpenseDetails {
       final currency = (rawCurrency == null ||
               rawCurrency.isEmpty ||
               rawCurrency.toLowerCase() == 'null')
-          ? 'N/A'
+          ? AppStrings.currencyDefault
           : rawCurrency;
 
       final category = decoded['category']?.toString().trim() ??
           optionalText('description') ??
-          'General';
+          AppStrings.categoryGeneral;
 
       if (parsedAmount == null || parsedAmount <= 0) {
         return ExpenseDetectionResult(

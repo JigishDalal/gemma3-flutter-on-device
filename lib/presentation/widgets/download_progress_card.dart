@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/constants/app_strings.dart';
 import '../../core/theme/app_theme.dart';
 
 /// Animated download progress card shown while the Gemma model is downloading.
@@ -89,7 +90,7 @@ class _DownloadProgressCardState extends State<DownloadProgressCard>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Downloading Gemma 3',
+                      AppStrings.downloadingTitle,
                       style:
                           Theme.of(context).textTheme.bodyLarge?.copyWith(
                                 fontWeight: FontWeight.w600,
@@ -98,7 +99,7 @@ class _DownloadProgressCardState extends State<DownloadProgressCard>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'On-device AI model · ~150 MB',
+                      AppStrings.downloadingSubtitle,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
