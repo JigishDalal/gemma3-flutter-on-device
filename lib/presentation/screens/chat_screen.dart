@@ -8,7 +8,6 @@ import '../widgets/chat_top_bar.dart';
 import '../widgets/download_progress_card.dart';
 import '../widgets/frosted_chat_bubble.dart';
 import '../widgets/persistent_input_bar.dart';
-import '../widgets/quick_action_chips.dart';
 import '../widgets/status_banners.dart';
 import '../widgets/voice_recording_overlay.dart';
 
@@ -146,26 +145,6 @@ class _ChatScreenState extends State<ChatScreen> {
                         );
                       }
                       return const SizedBox.shrink();
-                    },
-                  ),
-
-                  // Quick Action Chips for Mobile Actions
-                  BlocBuilder<ChatBloc, ChatState>(
-                    builder: (context, state) {
-                      final busy = state.isGenerating ||
-                          state.isDownloading ||
-                          state.isRecordingVoice ||
-                          state.isTranscribingVoice;
-                      if (busy) return const SizedBox.shrink();
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: QuickActionChips(
-                          onActionSelected: (prompt) {
-                            _textCtrl.text = prompt;
-                            _sendMessage();
-                          },
-                        ),
-                      );
                     },
                   ),
 

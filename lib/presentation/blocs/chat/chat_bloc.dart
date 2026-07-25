@@ -7,7 +7,6 @@ import 'package:uuid/uuid.dart';
 
 import '../../../../domain/entities/chat_message.dart';
 import '../../../../domain/repositories/model_repository.dart';
-import '../../../data/services/mobile_actions_executor.dart';
 import '../../../data/services/voice_service.dart';
 
 part 'chat_event.dart';
@@ -162,19 +161,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       final rawOutput = response.toString();
       debugPrint('Gemma direct raw output: $rawOutput');
 
-      String messageText =
-          rawOutput.isEmpty ? '(Empty response from model)' : rawOutput;
-
-      final actionCall = MobileActionsExecutor.parseActionCall(rawOutput);
-      if (actionCall != null) {
-        final executionResult =
-            await MobileActionsExecutor.executeAction(actionCall);
-        messageText = '$messageText\n\n$executionResult';
-      }
-
       final assistantMessage = ChatMessage(
         id: _uuid.v4(),
-        text: messageText,
+        text: rawOutput.isEmpty ? '(Empty response from model)' : rawOutput,
         isUser: false,
       );
 

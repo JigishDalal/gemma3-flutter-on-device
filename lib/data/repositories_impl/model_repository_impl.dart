@@ -139,15 +139,8 @@ class ModelRepositoryImpl implements ModelRepository {
   String _buildPrompt(String userInput) {
     return '''
 <start_of_turn>user
-You are an offline on-device Mobile Actions and Expense AI agent. Analyze the user prompt and extract intent into JSON matching one of these actions:
-
-Actions:
-1. add_expense: {"action":"add_expense","arguments":{"amount":500,"currency":"INR","category":"Groceries","description":"paid 500 for groceries"}}
-2. set_timer: {"action":"set_timer","arguments":{"seconds":300,"label":"Tea timer"}}
-3. open_app: {"action":"open_app","arguments":{"app_name":"Settings"}}
-4. toggle_setting: {"action":"toggle_setting","arguments":{"setting_name":"flashlight","enable":true}}
-
-User request: $userInput<end_of_turn>
+$userInput
+<end_of_turn>
 <start_of_turn>model
 ''';
   }
