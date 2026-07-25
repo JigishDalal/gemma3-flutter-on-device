@@ -20,9 +20,33 @@ class MobileActionsExecutor {
 
       if (decoded is! Map<String, dynamic>) return null;
 
-      final actionName = decoded['action']?.toString().toLowerCase() ??
+      String? actionName = decoded['action']?.toString().toLowerCase() ??
           decoded['function']?.toString().toLowerCase() ??
-          (decoded['is_expense'] == true ? 'add_expense' : null);
+          decoded['name']?.toString().toLowerCase() ??
+          decoded['tool']?.toString().toLowerCase() ??
+          decoded['call']?.toString().toLowerCase();
+
+      if (actionName == null) {
+        if (decoded['is_expense'] == true) {
+          actionName = 'add_expense';
+        } else {
+          for (final key in decoded.keys) {
+            final lowerKey = key.toLowerCase();
+            if (lowerKey.contains('flashlight') ||
+                lowerKey.contains('contact') ||
+                lowerKey.contains('email') ||
+                lowerKey.contains('map') ||
+                lowerKey.contains('wifi') ||
+                lowerKey.contains('calendar') ||
+                lowerKey.contains('expense') ||
+                lowerKey.contains('timer') ||
+                lowerKey.contains('app')) {
+              actionName = lowerKey;
+              break;
+            }
+          }
+        }
+      }
 
       if (actionName == null) return null;
 
@@ -31,6 +55,8 @@ class MobileActionsExecutor {
         args = decoded['arguments'];
       } else if (decoded['args'] is Map<String, dynamic>) {
         args = decoded['args'];
+      } else if (decoded['parameters'] is Map<String, dynamic>) {
+        args = decoded['parameters'];
       } else {
         args = Map<String, dynamic>.from(decoded);
       }

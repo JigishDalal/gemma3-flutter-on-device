@@ -169,7 +169,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       if (actionCall != null) {
         final executionResult =
             await MobileActionsExecutor.executeAction(actionCall);
-        messageText = '$messageText\n\n$executionResult';
+        messageText = executionResult;
       }
 
       final assistantMessage = ChatMessage(
